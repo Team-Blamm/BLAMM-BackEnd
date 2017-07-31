@@ -2,9 +2,10 @@
   "name": "blamm-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha -b",
+    "start": "NODE_ENV=dev node app.js"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,9 @@
     "url": "https://github.com/Team-Blamm/BLAMM-BackEnd/issues"
   },
   "homepage": "https://github.com/Team-Blamm/BLAMM-BackEnd#readme",
+  "engines": {
+    "node": "v8.1.4"
+  },
   "dependencies": {
     "assert": "^1.4.1",
     "bcryptjs": "^2.4.3",
@@ -26,6 +30,7 @@
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0",
     "pg": "^7.0.2",
-    "sequelize": "^4.4.2"
+    "sequelize": "^4.4.2",
+    "supertest": "^3.0.0"
   }
 }
