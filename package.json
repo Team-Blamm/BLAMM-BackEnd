@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "express-session": "^1.15.4",
     "mocha": "^3.4.2",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
