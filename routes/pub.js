@@ -14,7 +14,7 @@ router.get('/products/type/:type', function (req, res) {
       "results": [
         {
           "title": "Batman",
-          "price": "$800/hr",
+          "rate": 800,
           "img_src": "",
           "type": "hero",
           "tagline": "NaNaNaNaNaNaNaNaNa",
@@ -25,7 +25,7 @@ router.get('/products/type/:type', function (req, res) {
           ]
         }, {
           "title": "Spiderman",
-          "price": "$20/hr",
+          "rate": 19.99,
           "img_src": "",
           "type": "hero",
           "tagline": "Friendly Neighborhood Spiderman",
@@ -43,17 +43,17 @@ router.get('/products/type/:type', function (req, res) {
       "results": [
         {
           "title": "Megatron",
-          "price": "$50/hr",
+          "rate": 50,
           "img_src": "",
           "type": "villan",
-          "tagline": "Destruction at a great price",
+          "tagline": "Destruction at a great rate",
           "services": [
             "demolition",
             "protection"
           ]
         }, {
           "title": "Dr. Hugo Strange",
-          "price": " $100/hr",
+          "rate": 100,
           "img_src": "",
           "type": "villan",
           "tagline": "How...Interesting",
@@ -72,7 +72,7 @@ router.get('/products/name/:title', function (req, res) {
     res.json({
       "count": 1,
       "title": "Batman",
-      "price": "$800/hr",
+      "rate": 800,
       "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
       "img_src": "",
       "bg_img": "",
@@ -115,7 +115,7 @@ router.get('/products', function (req, res) {
     "results": [
       {
         "title": "Batman",
-        "price": "$800/hr",
+        "rate": 800,
         "img_src": "",
         "type": "hero",
         "tagline": "NaNaNaNaNaNaNaNaNa",
@@ -126,7 +126,7 @@ router.get('/products', function (req, res) {
         ]
       }, {
         "title": "Spiderman",
-        "price": "$20/hr",
+        "rate": 20,
         "img_src": "",
         "type": "hero",
         "tagline": "Friendly Neighborhood Spiderman",
@@ -137,7 +137,7 @@ router.get('/products', function (req, res) {
         ]
       }, {
         "title": "Megatron",
-        "price": "$50/hr",
+        "rate": 50,
         "img_src": "",
         "type": "villan",
         "tagline": "Destruction at a great price",
@@ -147,7 +147,7 @@ router.get('/products', function (req, res) {
         ]
       }, {
         "title": "Dr. Hugo Strange",
-        "price": " $100/hr",
+        "rate": 100,
         "img_src": "",
         "type": "villan",
         "tagline": "How...Interesting",
