@@ -11,6 +11,15 @@ const config = require('./config/config.json')[env]
 const pubRoutes = require('./routes/pub');
 // const privRoutes = require('./routes/priv');
 
+// TODO: adding models here
+const usersDb = require('./models/users');
+const servicesDb = require('./models/services');
+const productsDb = require('./models/products');
+const prodServDb = require('./models/prodServ');
+const reviewsDb = require('./models/reviews');
+const receiptDb = require('./models/receipts');
+const ordersDb = require('./models/orders')
+
 const app = express();
 
 app.use(bodyParser.urlencoded({
