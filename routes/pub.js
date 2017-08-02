@@ -116,7 +116,7 @@ router.get('/products', function (req, res) {
       {
         "title": "Batman",
         "rate": 800,
-        "img_src": "https://comicvine.gamespot.com/images/1300-3031477/",
+        "img_src": "https://static.comicvine.com/uploads/original/11111/111112793/3031477-nealadamsbatman.jpg",
         "type": "hero",
         "tagline": "NaNaNaNaNaNaNaNaNa",
         "services": [
