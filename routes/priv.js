@@ -30,12 +30,6 @@ passport.deserializeUser(function(id, next) {
   });
 });
 
-// passport.use('local-signup', new Strategy ({
-//     usernameField: 'username',
-//     passwordField: 'password',
-//     passReqToCallback: true
-//   },
-// Specifically for signing up a new user
 passport.use('local-signup', new Strategy ({
     passReqToCallback: true
   },
@@ -139,7 +133,7 @@ router.post('/signup', function (req, res) {
         username: req.body.username,
         email: req.body.email,
         password: userPass,
-        imgSrc: req.body.picture
+        imgSrc: req.body.imgSrc
       })
       if (req.body.admin) {
         newUser.admin = req.body.admin;

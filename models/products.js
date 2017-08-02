@@ -38,6 +38,7 @@ products.associate = function(models) {
   this.belongsTo(models.users, {foreignKey: 'userId', foreignKeyConstraint: true, onDelete: 'cascade', onUpdate: 'cascade', as: 'userProducts'});
   this.hasMany(models.orders, {as: 'productOrders', foreignKey: 'prodId'});
   this.hasMany(models.reviews, {as: 'productReviews', foreignKey: 'prodId'});
+  this.hasMany(models.prodServs, {as: 'productServices', foreignKey: 'prodId'})
 };
 
 return products;

@@ -17,7 +17,7 @@ module.exports = function(Sequelize, DataTypes) {
   }, {})
 
   services.associate = function(models) {
-    this.hasMany(models.prodServ, {as: 'relatedProducts', foreignKey: 'servId'});
+    this.hasMany(models.prodServs, {as: 'servedProducts', foreignKey: 'servId'});
   };
   return services;
 }
