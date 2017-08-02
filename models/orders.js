@@ -2,7 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   var orders = sequelize.define('orders', {
     quantitiy: {
-      type: Sequelize.DECIMAL
+      type: DataTypes.DECIMAL
     },
     createdAt: {
       allowNull: false,

@@ -4,24 +4,24 @@ module.exports = function(Sequelize, DataTypes) {
   // var posts = require('./posts')(Sequelize, DataTypes)
   var users = Sequelize.define('users', {
     username: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
     email: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
     password: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
     imgSrc: {
-      type: Sequelize.TEXT
+      type: DataTypes.TEXT
     },
     admin: {
-      type: Sequelize.BOOLEAN,
+      type: DataTypes.BOOLEAN,
       default: false
     },
     createdAt: {

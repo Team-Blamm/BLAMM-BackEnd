@@ -1,3 +1,6 @@
+const express = require('express');
+const router = express.Router();
+
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const BasicStrategy = require('passport-http').BasicStrategy;
@@ -7,7 +10,7 @@ const models = require('../models');
 const usersDb = models.users;
 
 const genHash = function(password) {
-  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null)
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
 router.use(passport.initialize());
@@ -27,10 +30,13 @@ passport.deserializeUser(function(id, next) {
   });
 });
 
+// passport.use('local-signup', new Strategy ({
+//     usernameField: 'username',
+//     passwordField: 'password',
+//     passReqToCallback: true
+//   },
 // Specifically for signing up a new user
 passport.use('local-signup', new Strategy ({
-    usernameField: 'username',
-    passwordField: 'password',
     passReqToCallback: true
   },
   function (req, username, password, next) {
@@ -50,6 +56,9 @@ passport.use('local-signup', new Strategy ({
           password: userPass,
           imgSrc: req.body.picture
         })
+        if (req.body.admin) {
+          newUser.admin = req.body.admin;
+        }
         newUser.save().then(function(newUsr, created) {
           if (!newUsr) {
             return next(null, false);
@@ -70,7 +79,7 @@ passport.use('local-signin', new Strategy ({
   },
   function(username, password, next) {
     let isValid = (usrPass, pass) => {
-      return bCrypt.compareSync(pass, usrPass);
+      return bcrypt.compareSync(pass, usrPass);
     }
     usersDb.findOne({
       where: {
@@ -96,7 +105,7 @@ passport.use('local-signin', new Strategy ({
 passport.use('basic', new BasicStrategy(
   function(user, password, done) {
     var isValid = (usrPass, pass) => {
-      return bCrypt.compareSync(pass, usrPass);
+      return bcrypt.compareSync(pass, usrPass);
     }
     Users.findOne({
       username: user
@@ -116,12 +125,40 @@ passport.use('basic', new BasicStrategy(
 ));
 
 router.post('/signup', function (req, res) {
-  passport.authenticate('local-signup');
-  res.json({
-    "success": true,
-    "username": req.user.username
+  console.log('request body:', req.body)
+  usersDb.findOne({
+    where: {
+      username: req.body.username
+  }}).then(function(data) {
+    if (data) {
+      return next(null, false, {message: "Email already used"});
+    } else {
+      var userPass = genHash(req.body.password);
+
+      let newUser = usersDb.build({
+        username: req.body.username,
+        email: req.body.email,
+        password: userPass,
+        imgSrc: req.body.picture
+      })
+      if (req.body.admin) {
+        newUser.admin = req.body.admin;
+      }
+      newUser.save().then(function(newUsr, created) {
+        if (!newUsr) {
+          return res.json({
+            "user": false
+          })
+        }
+        if (newUsr) {
+          return res.json({
+            "user": newUser.username
+          })
+        }
+      });
+    }
   })
 })
 
 
-mondule.exports = router
+module.exports = router

@@ -1,36 +1,36 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var posts = sequelize.define('products', {
+module.exports = function(Sequelize, DataTypes) {
+  var products = Sequelize.define('products', {
     title: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       unique: true,
       allowNull: false
     },
     description: {
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     rate: {
-      type: Sequelize.DECIMAL
+      type: DataTypes.DECIMAL
     },
     type: {
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     tagline: {
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     imgSrc: {
-      type: Sequelize.TEXT
+      type: DataTypes.TEXT
     },
     bgImg: {
-      type: Sequelize.TEXT
+      type: DataTypes.TEXT
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: DataTypes.DATE
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: DataTypes.DATE
     }
   }, {});
 

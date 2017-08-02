@@ -3,7 +3,7 @@
 module.exports = function(Sequelize, DataTypes) {
   var services = Sequelize.define('services', {
     tag: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
     createdAt: {
