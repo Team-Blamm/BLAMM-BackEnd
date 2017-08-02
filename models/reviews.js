@@ -3,10 +3,10 @@ module.exports = function(sequelize, DataTypes) {
   // var users = require('./users')(sequelize, DataTypes);
   var reviews = sequelize.define('reviews', {
     rating: {
-      type: Sequelize.INTEGER
+      type: DataTypes.INTEGER
     },
     review: {
-      type: Sequelize.TEXT
+      type: DataTypes.TEXT
     },
     createdAt: {
       allowNull: false,
