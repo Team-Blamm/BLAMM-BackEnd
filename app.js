@@ -4,8 +4,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
+const pg = require('pg');
 const env = process.env.NODE_ENV || "dev";
 const config = require('./config/config.json')[env]
+
+console.log(process.env.DATABASE_URL);
 
 // TODO: add routes here
 const pubRoutes = require('./routes/pub');
