@@ -12,6 +12,7 @@ console.log(process.env.DATABASE_URL);
 
 // TODO: add routes here
 const pubRoutes = require('./routes/pub');
+const publicRoutes = require('./routes/public')
 // const privRoutes = require('./routes/priv');
 
 // TODO: adding models here
@@ -38,7 +39,8 @@ app.use(session({
 
 // TODO: use Routes here
 app.use('/api/v1', pubRoutes);
-// app.use('/api/v1', privRoutes);
+app.use('/api/v2', publicRoutes);
+app.use('/api/v2', privRoutes);
 
 app.set('port', (process.env.PORT || 3000));
 if (require.main === module) {
