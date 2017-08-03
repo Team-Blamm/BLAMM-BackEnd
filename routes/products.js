@@ -108,7 +108,14 @@ router.post('/products/add', function (req, res) {
         "product": newProd.title
       })
     })
-  }).catch(function(err) {
+    .catch(function(err) {
+      console.log('error saving new product', err);
+      return res.json({
+        "error": err
+      })
+    })
+  })
+  .catch(function(err) {
     console.log('error saving new product', err);
     return res.json({
       "error": err
@@ -153,9 +160,18 @@ router.put('/products/:title/update', function (req, res) {
           // check if the services exist, then add as necessary
           findUpdateService(req.body.services, product.id)
           .then(function(resolve) {
-            console.log('resolve to put:', resolve);
+            outObj['services'] = req.body.services
+            console.log('outObj:', outObj);
+            return res.json(outObj);
           })
-        }).catch(function (err) {
+          .catch(function (err) {
+            console.log('error destroying old records', err);
+            return res.json({
+              'error': err
+            })
+          })
+        })
+        .catch(function (err) {
           console.log('error destroying old records', err);
           return res.json({
             'error': err
