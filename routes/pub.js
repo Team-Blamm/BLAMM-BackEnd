@@ -15,7 +15,7 @@ router.get('/products/type/:type', function (req, res) {
         {
           "title": "Batman",
           "rate": 800,
-          "img_src": "https://comicvine.gamespot.com/images/1300-3031477/",
+          "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
           "type": "hero",
           "tagline": "NaNaNaNaNaNaNaNaNa",
           "services": [
@@ -26,7 +26,7 @@ router.get('/products/type/:type', function (req, res) {
         }, {
           "title": "Spiderman",
           "rate": 19.99,
-          "img_src": "http://www.pngall.com/wp-content/uploads/2016/05/Spider-Man-PNG-File.png",
+          "imgSrc": "http://www.pngall.com/wp-content/uploads/2016/05/Spider-Man-PNG-File.png",
           "type": "hero",
           "tagline": "Friendly Neighborhood Spiderman",
           "services": [
@@ -44,7 +44,7 @@ router.get('/products/type/:type', function (req, res) {
         {
           "title": "Megatron",
           "rate": 50,
-          "img_src": "https://vignette1.wikia.nocookie.net/xaviertv/images/7/7f/Megatron.jpg/revision/latest?cb=20110701190508",
+          "imgSrc": "https://vignette1.wikia.nocookie.net/xaviertv/images/7/7f/Megatron.jpg/revision/latest?cb=20110701190508",
           "type": "villan",
           "tagline": "Destruction at a great rate",
           "services": [
@@ -54,7 +54,7 @@ router.get('/products/type/:type', function (req, res) {
         }, {
           "title": "Dr. Hugo Strange",
           "rate": 100,
-          "img_src": "https://static.comicvine.com/uploads/scale_small/10/100647/5446300-batman+%282016-%29+002-022.jpg",
+          "imgSrc": "https://static.comicvine.com/uploads/scale_small/10/100647/5446300-batman+%282016-%29+002-022.jpg",
           "type": "villan",
           "tagline": "How...Interesting",
           "services": [
@@ -74,8 +74,8 @@ router.get('/products/name/:title', function (req, res) {
       "title": "Batman",
       "rate": 800,
       "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
-      "img_src": "https://comicvine.gamespot.com/images/1300-3031477/",
-      "bg_img": "",
+      "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+      "bgImg": "",
       "type": "hero",
       "tagline": "NaNaNaNaNaNaNaNaNa",
       "services": [
@@ -116,7 +116,7 @@ router.get('/products', function (req, res) {
       {
         "title": "Batman",
         "rate": 800,
-        "img_src": "https://static.comicvine.com/uploads/original/11111/111112793/3031477-nealadamsbatman.jpg",
+        "imgSrc": "https://static.comicvine.com/uploads/original/11111/111112793/3031477-nealadamsbatman.jpg",
         "type": "hero",
         "tagline": "NaNaNaNaNaNaNaNaNa",
         "services": [
@@ -127,7 +127,7 @@ router.get('/products', function (req, res) {
       }, {
         "title": "Spiderman",
         "rate": 20,
-        "img_src": "http://www.pngall.com/wp-content/uploads/2016/05/Spider-Man-PNG-File.png",
+        "imgSrc": "http://www.pngall.com/wp-content/uploads/2016/05/Spider-Man-PNG-File.png",
         "type": "hero",
         "tagline": "Friendly Neighborhood Spiderman",
         "services": [
@@ -138,7 +138,7 @@ router.get('/products', function (req, res) {
       }, {
         "title": "Megatron",
         "rate": 50,
-        "img_src": "https://vignette1.wikia.nocookie.net/xaviertv/images/7/7f/Megatron.jpg/revision/latest?cb=20110701190508",
+        "imgSrc": "https://vignette1.wikia.nocookie.net/xaviertv/images/7/7f/Megatron.jpg/revision/latest?cb=20110701190508",
         "type": "villan",
         "tagline": "Destruction at a great price",
         "services": [
@@ -148,7 +148,7 @@ router.get('/products', function (req, res) {
       }, {
         "title": "Dr. Hugo Strange",
         "rate": 100,
-        "img_src": "https://static.comicvine.com/uploads/scale_small/10/100647/5446300-batman+%282016-%29+002-022.jpg",
+        "imgSrc": "https://static.comicvine.com/uploads/scale_small/10/100647/5446300-batman+%282016-%29+002-022.jpg",
         "type": "villan",
         "tagline": "How...Interesting",
         "services": [

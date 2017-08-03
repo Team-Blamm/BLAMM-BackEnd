@@ -22,7 +22,8 @@ module.exports = function(Sequelize, DataTypes) {
     },
     admin: {
       type: DataTypes.BOOLEAN,
-      default: false
+      defaultValue: false,
+      allowNull: false
     },
     createdAt: {
       allowNull: false,

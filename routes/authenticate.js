@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const authCheck = require('./check');
+const authProds = require('./products');
+const authServices = require('./services');
+const authOrders = require('./orders')
+
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const BasicStrategy = require('passport-http').BasicStrategy;
@@ -97,29 +102,33 @@ passport.use('local-signin', new Strategy ({
 ));
 
 passport.use('basic', new BasicStrategy(
-  function(user, password, done) {
+  function(user, password, next) {
+    // console.log('Attempting basic strategy');
     var isValid = (usrPass, pass) => {
       return bcrypt.compareSync(pass, usrPass);
     }
-    Users.findOne({
-      username: user
-    }, function(err, user) {
-       if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false);
-      }
-      if (!isValid(user.password, password)) {
-        return done(null, false);
-      }
-      return done(null, user);
-    });
-  }
-));
+    usersDb.findOne({where: {username: user}})
+    .then(function(user) {
+        if (!user) {
+          console.log('no user');
+          return next(null, false);
+        }
+        if (!isValid(user.password, password)) {
+          console.log('invalid password');
+          return next(null, false);
+        }
+        console.log('valid user');
+        return next(null, user);
+      })
+    .catch(function(err) {
+      console.log('error validating user', err);
+      return next(err, false)
+    })
+  })
+);
 
 router.post('/signup', function (req, res) {
-  console.log('request body:', req.body)
+  // console.log('request body:', req.body)
   usersDb.findOne({
     where: {
       username: req.body.username
@@ -153,6 +162,19 @@ router.post('/signup', function (req, res) {
     }
   })
 })
+
+router.use(passport.authenticate('basic', {
+  session: false
+}), authCheck);
+router.use(passport.authenticate('basic', {
+  session: false
+}), authProds);
+router.use(passport.authenticate('basic', {
+  session: false
+}), authServices);
+router.use(passport.authenticate('basic', {
+  session: false
+}), authOrders);
 
 
 module.exports = router

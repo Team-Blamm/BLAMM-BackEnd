@@ -24,23 +24,23 @@
 
 ###### Authenticated Routes
 - **POST** - /api/v2/signup -`Create a new user, returns {"user": "username"}`
- - username - unique string
- - email - unique string
- - password - password
- - imgSrc - string link to served image file
- - admin - boolean, default false
+  - username - unique string
+  - email - unique string
+  - password - password
+  - imgSrc - string link to served image file
+  - admin - boolean, default false
 - **GET** - /api/v2/check - `Validate a user/pass, returns {"user": "username"}`
- - username
- - password
+  - username
+  - password
 - **POST** - /api/v2/products/add - `Must have admin: true.  Creates a new product, returns {"product": "title"}`
- - title - unique string
- - tagline - a one sentence string highlighting the product
- - type - "hero" or "villain"
- - description - text
- - rate - number > 0
- - imgSrc - source of an image of the product
- - bgImg - source of a background image for the page
- - services - an array of services that the product provides
+  - title - unique string
+  - tagline - a one sentence string highlighting the product
+  - type - "hero" or "villain"
+  - description - text
+  - rate - number > 0
+  - imgSrc - source of an image of the product
+  - bgImg - source of a background image for the page
+  - services - an array of services that the product provides
 - **PUT** - /api/v2/products/:title/update - `Makes updates to a particular product`
   - tagline - a one sentence string highlighting the product (optional)
   - type - "hero" or "villain" (optional)
@@ -50,14 +50,14 @@
   - bgImg - source of a background image for the page (optional)
   - services - an array of services that the product provides (optional)
 - **DELETE** - /api/v2/products/:title/delete - `Removes a particular product`
- - must be admin who created the product
+  - must be admin who created the product
 - **POST** - /api/v2/products/:title/review - `Adds a review to a particular product`
- - rating - integer between 0 and 5, inclusive
- - review - text
+  - rating - integer between 0 and 5, inclusive
+  - review - text
 - **POST** - /api/v2/services/new - `Adds a new service to the database`
- - service - unique string
+  - service - unique string
 - **GET** - /api/v2/services/ - `pulls all listed services`
 - **POST** - /api/v2/order - `Creates a new order and returns a receipt`
- - item - an array of objects containing { product:title, quantity:positiveNumber }
+  - item - an array of objects containing { product:title, quantity:positiveNumber }
 
 #### login and log out of ui is still being figured out.
