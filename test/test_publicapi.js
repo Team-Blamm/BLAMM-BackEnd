@@ -94,7 +94,27 @@ describe('POST /api/v2/signup - add a user to the DB', function () {
 
 describe('POST /api/v2/products - test all products functions', function () {
 
-  it('user oracle should be able to add a batman product', function (done) {
+  it('Should not allow MrFreeze to add Batman', function (done) {
+    request(app).post('/api/v2/products/Batman/update')
+    .auth('MrFreeze', 'coldFront')
+    .send({
+      "title": "Batman",
+      "tagline": "NaNaNaNaNaNaNaNaNa",
+      "type": "hero",
+      "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
+      "rate": 800,
+      "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+      "bgImg": "",
+      "services": [
+        "detective",
+        "lurking",
+        "gadgets"
+      ]
+    })
+    .expect(401)
+    .end(done);
+  })
+  it('Should allow oracle to add a Batman product', function (done) {
     request(app).post('/api/v2/products/add')
     .auth("oracle", "oracle")
     .send({
@@ -116,27 +136,6 @@ describe('POST /api/v2/products - test all products functions', function () {
       "product": "Batman"
     })
     .end(done)
-  })
-
-  it('Should not allow MrFreeze to add Batman', function (done) {
-    request(app).post('/api/v2/products/Batman/update')
-    .auth('MrFreeze', 'coldFront')
-    .send({
-      "title": "Batman",
-      "tagline": "NaNaNaNaNaNaNaNaNa",
-      "type": "hero",
-      "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
-      "rate": 800,
-      "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
-      "bgImg": "",
-      "services": [
-        "detective",
-        "lurking",
-        "gadgets"
-      ]
-    })
-    .expect(401)
-    .end(done);
   })
 
   it('Should verify there is 1 product in the product DB', function (done) {
@@ -163,7 +162,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       done();
     })
   })
-  it('user oracle should be able to add a Nightwing product', function (done) {
+
+  it('Should allow oracle to add a Nightwing product', function (done) {
     request(app).post('/api/v2/products/add')
     .auth("oracle", "oracle")
     .send({
@@ -220,5 +220,51 @@ describe('POST /api/v2/products - test all products functions', function () {
     })
     .expect(401)
     .end(done);
+  })
+  it('Should allow oracle to update the Batman rate', function (done) {
+    request(app).put('/api/v2/products/Batman/update')
+    .auth('oracle', 'oracle')
+    .send({
+      'rate': 79.99
+    })
+    .expect(200)
+    .expect({
+      'product': 'Batman',
+      'rate': '79.99'
+    })
+    .end(done)
+  })
+  it('Should not allow oracle to update Nightwings title', function (done) {
+    request(app).put('/api/v2/products/Nightwing/update')
+    .auth('oracle', 'oracle')
+    .send({
+      'title': 'Robin'
+    })
+    .expect(400)
+    .expect({
+      'error': 'cannot update title'
+    })
+    .end(done)
+  })
+  it('Should allow oracle to update the Batman tagline and services', function (done) {
+    request(app).put('/api/v2/products/Batman/update')
+    .auth('oracle', 'oracle')
+    .send({
+      'tagline': 'The Dark Knight',
+      'services': [
+        'detective',
+        'chauffeur'
+      ]
+    })
+    .expect(200)
+    .expect({
+      'product': 'Batman',
+      'tagline': 'The Dark Knight',
+      'services': [
+        'detective',
+        'chauffeur'
+      ]
+    })
+    .end(done)
   })
 })

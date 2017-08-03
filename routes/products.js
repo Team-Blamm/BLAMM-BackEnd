@@ -14,17 +14,6 @@ const ordersDb = models.orders;
 
 // const services = require('./services')
 
-router.use(function (req, res, next) {
-  console.log('products admin', req.user.username, req.user.admin);
-  if (req.user.admin) {
-    next();
-  } else {
-    return res.status(401).json({
-      "error": "unauthorized"
-    });
-  }
-})
-
 function newProdServ(prodId, servId) {
   let productService = prodServsDb.build({
     "prodId": prodId,
@@ -39,6 +28,25 @@ function newProdServ(prodId, servId) {
     return;
   })
 }
+
+router.post('/products/:title/review', function (req, res) {
+  // TODO: Allow any logged in user to leave a review
+  res.json({
+    "error": "placeholder"
+  })
+})
+
+router.use(function (req, res, next) {
+  // Allows for only users who are also admins to take these actions
+  console.log('products admin', req.user.username, req.user.admin);
+  if (req.user.admin) {
+    next();
+  } else {
+    return res.status(401).json({
+      "error": "unauthorized"
+    });
+  }
+})
 
 router.post('/products/add', function (req, res) {
   let newProduct = productsDb.build({
@@ -56,6 +64,7 @@ router.post('/products/add', function (req, res) {
     console.log(`new product, ${newProd.title}, added to DB`);
     let count = 0;
     req.body.services.map(function(service) {
+      // should be using sequelize findOrCreate, but it's borked up with the version of Sequelize and postgres
       servicesDb.findOne({
         where: {
           "tag": service
@@ -74,8 +83,6 @@ router.post('/products/add', function (req, res) {
           })
         }
       })
-      // should be using findOrCreate, but it's borked up with the version of Sequelize and postgres
-      // servicesDb.findOrCreate
     })
     res.json({
       "product": newProd.title
@@ -85,6 +92,41 @@ router.post('/products/add', function (req, res) {
     return res.json({
       "error": err
     })
+  })
+})
+
+router.put('/products/:title/update', function (req, res) {
+  productsDb.findOne({
+    where: {
+      "title": req.params.title
+    }})
+  .then(function (product) {
+    // ensure that the admin that is making the request is the same as the admin who created the resource
+    if (req.user.id !== product.userId) {
+      return res.status(401).json({
+        "error": "unauthorized action"
+      })
+    }
+
+  })
+})
+
+router.delete('/products/:title/delete', function (req, res) {
+  productsDb.findOne({
+    where: {
+      "title": req.params.title
+    }})
+  .then(function (product) {
+    // ensure that the admin that is making the request is the same as the admin who created the resource
+    if (req.user.id !== product.userId) {
+      return res.status(401).json({
+        "error": "unauthorized action"
+      })
+    }
+    return res.json({
+      "error": "placeholder"
+    })
+    // productsDb.destroy
   })
 })
 
