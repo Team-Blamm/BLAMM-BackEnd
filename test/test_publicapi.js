@@ -11,22 +11,34 @@ const reviewsDb = models.reviews
 const receiptDb = models.receipts
 const ordersDb = models.orders
 
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+
 describe('POST /api/v2/signup - add a user to the DB', function () {
   before('reset the test database', function(done) {
-    usersDb.destroy({ where: {}, truncate: false }).then(function() {});
-    servicesDb.destroy({ where: {}, truncate: false }).then(function() {});
-    productsDb.destroy({ where: {}, truncate: false }).then(function() {});
-    prodServsDb.destroy({ where: {}, truncate: false }).then(function() {});
-    reviewsDb.destroy({ where: {}, truncate: false }).then(function() {});
-    receiptDb.destroy({ where: {}, truncate: false }).then(function() {});
-    ordersDb.destroy({ where: {}, truncate: false }).then(function() {});
+    prodServsDb.destroy({ where: {}, truncate: false }).then(function() {
+      servicesDb.destroy({ where: {}, truncate: false }).then(function() {});
+      ordersDb.destroy({ where: {}, truncate: false }).then(function() {
+        receiptDb.destroy({ where: {}, truncate: false }).then(function() {});
+        productsDb.destroy({ where: {}, truncate: false }).then(function() {
+          reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
+            usersDb.destroy({ where: {}, truncate: false }).then(function() {});
+          });
+        });
+      });
+    });
 
     setTimeout(function() {
       return done();
     }, 500);
   })
 
-  it('Should add user "Reynard" to the user collection', function(done) {
+  it('Should add user "oracle" to the user collection', function(done) {
     request(app).post('/api/v2/signup')
       .send({
         "username": "oracle",
@@ -76,5 +88,137 @@ describe('POST /api/v2/signup - add a user to the DB', function () {
         "username": "MrFreeze"
       })
       .end(done)
+  })
+})
+
+
+describe('POST /api/v2/products - test all products functions', function () {
+
+  it('user oracle should be able to add a batman product', function (done) {
+    request(app).post('/api/v2/products/add')
+    .auth("oracle", "oracle")
+    .send({
+      "title": "Batman",
+      "tagline": "NaNaNaNaNaNaNaNaNa",
+      "type": "hero",
+      "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
+      "rate": 800,
+      "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+      "bgImg": "",
+      "services": [
+        "detective",
+        "lurking",
+        "gadgets"
+      ]
+    })
+    .expect(200)
+    .expect({
+      "product": "Batman"
+    })
+    .end(done)
+  })
+
+  it('Should not allow MrFreeze to add Batman', function (done) {
+    request(app).post('/api/v2/products/Batman/update')
+    .auth('MrFreeze', 'coldFront')
+    .send({
+      "title": "Batman",
+      "tagline": "NaNaNaNaNaNaNaNaNa",
+      "type": "hero",
+      "description": "The Dark Knight of Gotham, has a full compliment of technologic tricks and sidekicks to ensure that he can really complete the task you have for him.  Also the worlds greatest detective.",
+      "rate": 800,
+      "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+      "bgImg": "",
+      "services": [
+        "detective",
+        "lurking",
+        "gadgets"
+      ]
+    })
+    .expect(401)
+    .end(done);
+  })
+
+  it('Should verify there is 1 product in the product DB', function (done) {
+    productsDb.count({}).then(function(num) {
+      assert.equal(num, 1);
+      done();
+    }).catch(function(err) {
+      done();
+    })
+  })
+  it('Should verify there are 3 services in the services DB', function (done) {
+    servicesDb.count({}).then(function(num) {
+      assert.equal(num, 3);
+      done();
+    }).catch(function(err) {
+      done();
+    })
+  })
+  it('Should verify there are 3 entries in the prodServ DB', function (done) {
+    prodServsDb.count({}).then(function(num) {
+      assert.equal(num, 3);
+      done();
+    }).catch(function(err) {
+      done();
+    })
+  })
+  it('user oracle should be able to add a Nightwing product', function (done) {
+    request(app).post('/api/v2/products/add')
+    .auth("oracle", "oracle")
+    .send({
+      "title": "Nightwing",
+      "tagline": "I am the Night(wing)",
+      "type": "hero",
+      "description": "I used to be Robin.",
+      "rate": 40,
+      "imgSrc": "",
+      "bgImg": "",
+      "services": [
+        "lurking",
+        "gadgets",
+        "childrens parties"
+      ]
+    })
+    .expect(200)
+    .expect({
+      "product": "Nightwing"
+    })
+    .end(done)
+  })
+  it('Should verify there are 2 products in the product DB', function (done) {
+    productsDb.count({}).then(function(num) {
+      assert.equal(num, 2);
+      done();
+    }).catch(function(err) {
+      done();
+    })
+  })
+  it('Should verify there are 4 services in the services DB', function (done) {
+    servicesDb.count({}).then(function(num) {
+      assert.equal(num, 4);
+      done();
+    }).catch(function(err) {
+      done();
+    })
+  })
+  it('Should verify there are 6 entries in the prodServ DB', function (done) {
+    prodServsDb.count({}).then(function(num) {
+      assert.equal(num, 6);
+      done();
+    }).catch(function(err) {
+      console.log(err);
+      done();
+    })
+  })
+
+  it('Should not allow MrFreeze to update Batman', function (done) {
+    request(app).put('/api/v2/products/Batman/update')
+    .auth('MrFreeze', 'coldFront')
+    .send({
+      'description': 'I am now a snowman'
+    })
+    .expect(401)
+    .end(done);
   })
 })

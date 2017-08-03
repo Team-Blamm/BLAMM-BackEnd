@@ -16,13 +16,14 @@ const publicRoutes = require('./routes/public')
 const privRoutes = require('./routes/authenticate');
 
 // TODO: adding models here
-const usersDb = require('./models/users');
-const servicesDb = require('./models/services');
-const productsDb = require('./models/products');
-const prodServsDb = require('./models/prodServs');
-const reviewsDb = require('./models/reviews');
-const receiptDb = require('./models/receipts');
-const ordersDb = require('./models/orders')
+// const models = require('./models');
+// const usersDb = models.users;
+// const servicesDb = models.services;
+// const productsDb = models.products;
+// const prodServsDb = models.prodServs;
+// const reviewsDb = models.reviews;
+// const receiptDb = models.receipts;
+// const ordersDb = models.orders;
 
 const app = express();
 
