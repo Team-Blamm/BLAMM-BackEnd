@@ -13,7 +13,7 @@ const config = require('./config/config.json')[env]
 // TODO: add routes here
 const pubRoutes = require('./routes/pub');
 const publicRoutes = require('./routes/public')
-const privRoutes = require('./routes/priv');
+const privRoutes = require('./routes/authenticate');
 
 // TODO: adding models here
 const usersDb = require('./models/users');

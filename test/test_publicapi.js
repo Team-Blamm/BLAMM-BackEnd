@@ -29,30 +29,30 @@ describe('POST /api/v2/signup - add a user to the DB', function () {
   it('Should add user "Reynard" to the user collection', function(done) {
     request(app).post('/api/v2/signup')
       .send({
-        "username": "Reynard",
-        "password": "l3tsB4rkMor3",
-        "email": "rey@barks.com",
+        "username": "oracle",
+        "password": "oracle",
+        "email": "oracle@batman.com",
         "imgSrc": "",
         "admin": true
       })
       .set('Accept', 'application/json')
       .expect(200)
       .expect({
-        "user": "Reynard"
+        "user": "oracle"
       })
       .end(done)
   });
-  it('Should add user "Seymour" to the user collection', function(done) {
+  it('Should add user "MrFreeze" to the user collection', function(done) {
     request(app).post('/api/v2/signup')
       .send({
-        "username": "Seymour",
-        "password": "l3tsE4tL3aves",
-        "email": "seymour@barks.com",
+        "username": "MrFreeze",
+        "password": "coldFront",
+        "email": "freezing@frost.com",
         "imgSrc": "123.jpg"
       })
       .expect(200)
       .expect({
-        "user": "Seymour"
+        "user": "MrFreeze"
       })
       .end(done)
   });
@@ -61,5 +61,20 @@ describe('POST /api/v2/signup - add a user to the DB', function () {
       assert.equal(num, 2);
       done();
     })
+  })
+  it('Should return that brad:test is an invalid user:pass', function(done) {
+    request(app).get('/api/v2/check')
+    .auth("brad", "test")
+    .expect(401)
+    .end(done)
+  })
+  it('Should return that MrFreeze/coldFront is a valid user:pass', function(done) {
+    request(app).get('/api/v2/check')
+      .auth("MrFreeze", "coldFront")
+      .expect(200)
+      .expect({
+        "username": "MrFreeze"
+      })
+      .end(done)
   })
 })
