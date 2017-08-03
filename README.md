@@ -50,7 +50,7 @@
   - bgImg - source of a background image for the page (optional)
   - services - an array of services that the product provides (optional)
 - **DELETE** - /api/v2/products/:title/delete - `Removes a particular product`
- - must be admin who created the product
+  - must be admin who created the product
 - **POST** - /api/v2/products/:title/review - `Adds a review to a particular product`
   - rating - integer between 0 and 5, inclusive
   - review - text
