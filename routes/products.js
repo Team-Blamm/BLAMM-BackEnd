@@ -15,17 +15,57 @@ const ordersDb = models.orders;
 // const services = require('./services')
 
 function newProdServ(prodId, servId) {
-  let productService = prodServsDb.build({
-    "prodId": prodId,
-    "servId": servId
+  return new Promise((resolve, reject) => {
+    let productService = prodServsDb.build({
+      "prodId": prodId,
+      "servId": servId
+    })
+    productService.save()
+    .then(function(prodServ) {
+      resolve(prodServ);
+    })
+    .catch(function(err) {
+      console.log('error', err);
+      reject(err);
+    })
   })
-  productService.save()
-  .then(function(prodServ) {
-    return;
-  })
-  .catch(function(err) {
-    console.log('error', err);
-    return;
+}
+
+function findUpdateService(services, productId) {
+  return new Promise((resolve, reject) => {
+    services.map(service => {
+      servicesDb.findOne({
+        where: {
+          "tag": service
+        }
+      }).then((serv) => {
+        if (serv) {
+          newProdServ(productId, serv.id)
+          .then(function (prodServ) {
+            return resolve(prodServ);
+          })
+        } else {
+          let newService = servicesDb.build({
+            "tag": service
+          })
+          newService.save()
+          .then(function(newServ) {
+            newProdServ(productId, newServ.id)
+            .then(function (prodServ) {
+              return resolve(prodServ);
+            })
+            .catch(function (err) {
+              console.log('error building new prodServ');
+              return reject(err);
+            })
+          })
+          .catch(function (err) {
+            console.log('error building new service');
+            return reject(err);
+          })
+        }
+      })
+    })
   })
 }
 
@@ -38,7 +78,6 @@ router.post('/products/:title/review', function (req, res) {
 
 router.use(function (req, res, next) {
   // Allows for only users who are also admins to take these actions
-  console.log('products admin', req.user.username, req.user.admin);
   if (req.user.admin) {
     next();
   } else {
@@ -62,30 +101,12 @@ router.post('/products/add', function (req, res) {
   newProduct.save()
   .then(function(newProd) {
     console.log(`new product, ${newProd.title}, added to DB`);
-    let count = 0;
-    req.body.services.map(function(service) {
-      // should be using sequelize findOrCreate, but it's borked up with the version of Sequelize and postgres
-      servicesDb.findOne({
-        where: {
-          "tag": service
-        }
-      }).then((serv) => {
-        // console.log(serv);
-        if (serv) {
-          newProdServ(newProd.id, serv.id)
-        } else {
-          let newService = servicesDb.build({
-            "tag": service
-          })
-          newService.save()
-          .then(function(newServ) {
-            newProdServ(newProd.id, newServ.id)
-          })
-        }
+    // should be using sequelize findOrCreate, but it's borked up with the version of Sequelize and postgres
+    findUpdateService(req.body.services, newProd.id)
+    .then(function(resolve) {
+      res.json({
+        "product": newProd.title
       })
-    })
-    res.json({
-      "product": newProd.title
     })
   }).catch(function(err) {
     console.log('error saving new product', err);
@@ -96,6 +117,11 @@ router.post('/products/add', function (req, res) {
 })
 
 router.put('/products/:title/update', function (req, res) {
+  if (req.body.title) {
+    return res.status(400).json({
+      "error": "cannot update title"
+    })
+  }
   productsDb.findOne({
     where: {
       "title": req.params.title
@@ -107,7 +133,39 @@ router.put('/products/:title/update', function (req, res) {
         "error": "unauthorized action"
       })
     }
-
+    console.log(Object.keys(req.body));
+    product.set(req.body)
+    product.save().then(function(updated) {
+      let outObj = {
+        "product": updated.title
+      }
+      Object.keys(req.body).map((key) => {
+        outObj[key] = updated[key]
+      })
+      if (req.body.services) {
+        console.log('need to update services');
+        // remove old product services
+        prodServsDb.destroy({
+          where: {
+            prodId: product.id
+          }
+        }).then(function(next) {
+          // check if the services exist, then add as necessary
+          findUpdateService(req.body.services, product.id)
+          .then(function(resolve) {
+            console.log('resolve to put:', resolve);
+          })
+        }).catch(function (err) {
+          console.log('error destroying old records', err);
+          return res.json({
+            'error': err
+          })
+        })
+      } else {
+        // console.log('updates:', updated);
+        return res.json(outObj)
+      }
+    })
   })
 })
 

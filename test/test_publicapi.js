@@ -143,7 +143,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 1);
       done();
     }).catch(function(err) {
-      done();
+      log(err);
     })
   })
   it('Should verify there are 3 services in the services DB', function (done) {
@@ -151,7 +151,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      done();
+      console.log(err);
     })
   })
   it('Should verify there are 3 entries in the prodServ DB', function (done) {
@@ -159,7 +159,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      done();
+      console.log(err);
     })
   })
 
@@ -191,7 +191,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 2);
       done();
     }).catch(function(err) {
-      done();
+      console.log(err);
     })
   })
   it('Should verify there are 4 services in the services DB', function (done) {
@@ -199,7 +199,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 4);
       done();
     }).catch(function(err) {
-      done();
+      console.log(err);
     })
   })
   it('Should verify there are 6 entries in the prodServ DB', function (done) {
@@ -208,7 +208,6 @@ describe('POST /api/v2/products - test all products functions', function () {
       done();
     }).catch(function(err) {
       console.log(err);
-      done();
     })
   })
 
@@ -221,6 +220,18 @@ describe('POST /api/v2/products - test all products functions', function () {
     .expect(401)
     .end(done);
   })
+  it('Should not allow oracle to update Nightwings title', function (done) {
+    request(app).put('/api/v2/products/Nightwing/update')
+    .auth('oracle', 'oracle')
+    .send({
+      'title': 'Robin'
+    })
+    .expect(400)
+    .expect({
+      'error': 'cannot update title'
+    })
+    .end(done)
+  })
   it('Should allow oracle to update the Batman rate', function (done) {
     request(app).put('/api/v2/products/Batman/update')
     .auth('oracle', 'oracle')
@@ -231,18 +242,6 @@ describe('POST /api/v2/products - test all products functions', function () {
     .expect({
       'product': 'Batman',
       'rate': '79.99'
-    })
-    .end(done)
-  })
-  it('Should not allow oracle to update Nightwings title', function (done) {
-    request(app).put('/api/v2/products/Nightwing/update')
-    .auth('oracle', 'oracle')
-    .send({
-      'title': 'Robin'
-    })
-    .expect(400)
-    .expect({
-      'error': 'cannot update title'
     })
     .end(done)
   })
