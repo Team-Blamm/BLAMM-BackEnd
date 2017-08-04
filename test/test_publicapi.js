@@ -25,8 +25,8 @@ describe('POST /api/v2/signup - add a user to the DB', function () {
       ordersDb.destroy({ where: {}, truncate: false }).then(function() {
         servicesDb.destroy({ where: {}, truncate: false }).then(function() {
           receiptDb.destroy({ where: {}, truncate: false }).then(function() {
-            productsDb.destroy({ where: {}, truncate: false }).then(function() {
-              reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
+            reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
+              productsDb.destroy({ where: {}, truncate: false }).then(function() {
                 usersDb.destroy({ where: {}, truncate: false }).then(function() {
                   return done();
                 });
@@ -278,34 +278,6 @@ describe('GET /api/v2/products - test the gets', function () {
   it('Should return Batman and Nightwing', function (done) {
     request(app).get('/api/v2/products')
     .expect(200)
-    // .expect({
-    //   "count": 2,
-    //   "results": [
-    //     {
-    //       "title": "Batman",
-    //       "tagline": "The Dark Knight",
-    //       "type": "hero",
-    //       "rate": 79.99,
-    //       "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
-    //       "services": [
-    //         "detective",
-    //         "chauffeur"
-    //       ]
-    //     },
-    //     {
-    //       "title": "Nightwing",
-    //       "tagline": "I am the Night(wing)",
-    //       "type": "hero",
-    //       "rate": 40,
-    //       "imgSrc": "",
-    //       "services": [
-    //         "lurking",
-    //         "gadgets",
-    //         "childrens parties"
-    //       ]
-    //     }
-    //   ]
-    // })
     .expect(function (res) {
       // I know I'm being really lazy, I should check everything that is in the JSON above.  No Time.
       // While I'm at it, I should split this into 8 files and make them completely independant.
@@ -403,5 +375,33 @@ describe('GET /api/v2/products - test the gets', function () {
       assert(res.body.results.includes('chauffeur'))
     })
     .end(done);
+  })
+})
+
+describe('POST /api/v2/products/:title/review', function () {
+  it('Should allow a valid user to post a rating and review', function (done) {
+    request(app).post('/api/v2/products/Batman/review')
+    .auth('MrFreeze', 'coldFront')
+    .send({
+      "rating": 1,
+      "review": "Requested a ride across town, he wouldn't let me touch the temperature controls, or even consider turning it down.  Very inconsiderate"
+    })
+    .expect(200)
+    .expect({
+      "product": "Batman",
+      "rating": 1,
+      "review": "Requested a ride across town, he wouldn't let me touch the temperature controls, or even consider turning it down.  Very inconsiderate"
+    })
+    .end(done)
+  })
+  it('Should verify that the review shows up when getting Batman', function (done) {
+    request(app).get('/api/v2/products/name/Batman')
+    .expect(200)
+    .expect(function (res) {
+      assert(res.body.reviews[0].username == "MrFreeze");
+      assert(res.body.reviews[0].rating == 1);
+      assert(res.body.reviews[0].review == "Requested a ride across town, he wouldn't let me touch the temperature controls, or even consider turning it down.  Very inconsiderate")
+    })
+    .end(done)
   })
 })
