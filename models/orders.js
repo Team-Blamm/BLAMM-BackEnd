@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var orders = sequelize.define('orders', {
-    quantitiy: {
+    quantity: {
       type: DataTypes.DECIMAL
     },
     createdAt: {

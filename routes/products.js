@@ -70,7 +70,7 @@ function findUpdateService(services, productId) {
 }
 
 router.post('/products/:title/review', function (req, res) {
-  // TODO: Allow any logged in user to leave a review
+  // Allows any logged in user to leave a review
   productsDb.find({
     where: {"title": req.params.title}
   })

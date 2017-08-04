@@ -168,13 +168,13 @@ router.use(passport.authenticate('basic', {
 }), authCheck);
 router.use(passport.authenticate('basic', {
   session: false
-}), authProds);
+}), authOrders);
 router.use(passport.authenticate('basic', {
   session: false
 }), authServices);
 router.use(passport.authenticate('basic', {
   session: false
-}), authOrders);
+}), authProds);
 
 
 module.exports = router
