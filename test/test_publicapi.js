@@ -405,3 +405,41 @@ describe('POST /api/v2/products/:title/review', function () {
     .end(done)
   })
 })
+
+describe('POST /api/v2/orders - test orders', function () {
+  it('Should add a new order and receipt for Deadpool', function (done) {
+    request(app).post('/api/v2/orders/new')
+    .auth('MrFreeze', 'coldFront')
+    .send({
+      "order": [
+        {
+          "product": "Deadpool",
+          "quantity": 10
+        },
+        {
+          "product": "Nightwing",
+          "quantity": .5
+        }
+      ]
+    })
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.customer, "MrFreeze");
+      assert.equal(res.body.order.length, 2);
+      assert(res.body.orderNumber);
+      // "customer": "MrFreeze",
+      // "orderNumber":
+      // "order": [
+      //   {
+      //     "product": "Deadpool",
+      //     "quantity": 10
+      //   },
+      //   {
+      //     "product": "Nightwing",
+      //     "quantity": .5
+      //   }
+      // ]
+    })
+    .end(done)
+  })
+})

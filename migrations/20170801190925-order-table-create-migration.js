@@ -28,7 +28,7 @@ module.exports = {
           onUpdate: 'cascade'
         }
       },
-      quantitiy: {
+      quantity: {
         type: Sequelize.DECIMAL
       },
       createdAt: {
