@@ -399,6 +399,7 @@ describe('POST /api/v2/products/:title/review', function () {
     .expect(200)
     .expect(function (res) {
       assert(res.body.reviews[0].username == "MrFreeze");
+      assert(res.body.reviews[0].userImg == "123.jpg")
       assert(res.body.reviews[0].rating == 1);
       assert(res.body.reviews[0].review == "Requested a ride across town, he wouldn't let me touch the temperature controls, or even consider turning it down.  Very inconsiderate")
     })

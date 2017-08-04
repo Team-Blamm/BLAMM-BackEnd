@@ -81,6 +81,7 @@ router.get('/products/name/:title', function (req, res) {
     let reviews = product.productReviews.map((review) => {
       return {
         "username": review.userReviews.username,
+        "userImg": review.userReviews.imgSrc,
         "rating": review.rating,
         "review": review.review
       }
