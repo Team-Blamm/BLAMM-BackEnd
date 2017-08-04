@@ -461,3 +461,21 @@ describe('POST /api/v2/orders - test orders', function () {
     .end(done)
   })
 })
+
+describe(' DELETE /api/v2/products/:title/delete', function () {
+  it('Should prevent deadpool from deleting Nightwing product', function(done) {
+    request(app).delete('/api/v2/products/Nightwing/delete')
+    .auth('deadpool', 'skullpoopl')
+    .expect(401)
+    .end(done)
+  })
+  it('Should allow oracle to delete the Nightwing product', function(done) {
+    request(app).delete('/api/v2/products/Nightwing/delete')
+    .auth('oracle', 'oracle')
+    .expect(200)
+    .expect({
+      "delete": "Nightwing"
+    })
+    .end(done)
+  })
+})
