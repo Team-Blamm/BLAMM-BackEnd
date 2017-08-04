@@ -10,6 +10,46 @@ const reviewsDb = models.reviews;
 const receiptDb = models.receipts;
 const ordersDb = models.orders;
 
+router.get('/orders', function (req, res) {
+  receiptDb.findAll({
+    where: {"userId": req.user.id},
+    include: {
+      model: ordersDb,
+      as: 'receiptOrders',
+      include: {
+        model: productsDb,
+        as: 'prodOrders'
+      }
+    }
+  })
+  .then(function(receipts) {
+    let receiptOut = receipts.map((rece) => {
+      let orderOut = rece.receiptOrders.map((ord) => {
+        return {
+          "product": ord.prodOrders.title,
+          "quantity": ord.quantity
+        }
+      })
+      return {
+        "customer": req.user.username,
+        "receiptId": rece.id,
+        "order": orderOut
+      }
+    })
+    let outObj = {
+      "count": receipts.length,
+      "receipts": receiptOut
+    }
+    return res.json(outObj);
+  })
+  .catch(function (err) {
+    console.log("error finding receipts", err);
+    return res.json({
+      "error": err
+    })
+  })
+})
+
 router.post('/orders/new', function (req, res) {
   // fetch user, insert into receipt table, then for each order, fetch the product and insert prodId, receiptId and quantity into the order table
   usersDb.find({

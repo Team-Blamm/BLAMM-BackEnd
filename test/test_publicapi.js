@@ -408,7 +408,7 @@ describe('POST /api/v2/products/:title/review', function () {
 })
 
 describe('POST /api/v2/orders - test orders', function () {
-  it('Should add a new order and receipt for Deadpool', function (done) {
+  it('Should add a new order and receipt for MrFreeze', function (done) {
     request(app).post('/api/v2/orders/new')
     .auth('MrFreeze', 'coldFront')
     .send({
@@ -428,18 +428,35 @@ describe('POST /api/v2/orders - test orders', function () {
       assert.equal(res.body.customer, "MrFreeze");
       assert.equal(res.body.order.length, 2);
       assert(res.body.orderNumber);
-      // "customer": "MrFreeze",
-      // "orderNumber":
-      // "order": [
-      //   {
-      //     "product": "Deadpool",
-      //     "quantity": 10
-      //   },
-      //   {
-      //     "product": "Nightwing",
-      //     "quantity": .5
-      //   }
-      // ]
+    })
+    .end(done)
+  })
+  it('Should add a new order and receipt for oracle', function (done) {
+    request(app).post('/api/v2/orders/new')
+    .auth('oracle', 'oracle')
+    .send({
+      "order": [
+        {
+          "product": "Batman",
+          "quantity": 1
+        }
+      ]
+    })
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.customer, "oracle");
+      assert.equal(res.body.order.length, 1);
+      assert(res.body.orderNumber);
+    })
+    .end(done)
+  })
+  it('Should let MrFreeze get his receipt', function (done) {
+    request(app).get('/api/v2/orders')
+    .auth('MrFreeze', 'coldFront')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.receipts[0].customer, "MrFreeze");
+      assert.equal(res.body.count, 1);
     })
     .end(done)
   })
