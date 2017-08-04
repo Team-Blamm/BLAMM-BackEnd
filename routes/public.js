@@ -14,6 +14,7 @@ const ordersDb = models.orders;
 
 function findAllWhere(whereStmt) {
   return new Promise ((resolve, reject) => {
+    whereStmt["isActive"] = true
     productsDb.findAll({
       where: whereStmt,
       include: {
