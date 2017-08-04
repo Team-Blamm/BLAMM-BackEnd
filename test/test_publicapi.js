@@ -178,7 +178,7 @@ describe('POST /api/v2/products - test all products functions', function () {
       "imgSrc": "",
       "bgImg": "",
       "services": [
-        "lurking",
+        "detective",
         "gadgets",
         "childrens parties"
       ]
@@ -377,6 +377,16 @@ describe('GET /api/v2/products - test the gets', function () {
       assert.equal(res.body.services.includes("pool cleaning"), true);
       assert.equal(res.body.services.length, 2);
       assert.equal(res.body.reviews.length, 0);
+    })
+    .end(done)
+  })
+  it('Should return both Batman and Nightwing', function (done) {
+    request(app).get('/api/v2/products/service/detective')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 2);
+      assert.equal(res.body.results[0].title === "Batman" || res.body.results[0].title === "Nightwing", true)
+      assert.equal(res.body.results[1].title === "Batman" || res.body.results[1].title === "Nightwing", true)
     })
     .end(done)
   })

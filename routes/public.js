@@ -119,6 +119,29 @@ router.get('/products/type/:type', function (req, res) {
   })
 })
 
+router.get('/products/service/:service', function (req, res) {
+  findAllWhere({})
+  .then(function(data) {
+    let results = data.results.filter((result) => {
+      if (result.services.includes(req.params.service)) {
+        return true;
+      }
+      return false;
+    })
+    let outJson = {
+      "count": results.length,
+      "results": results
+    }
+    return res.json(outJson)
+  })
+  .catch(function(err) {
+    console.log('error', err);
+    res.json({
+      "error": err
+    })
+  })
+})
+
 router.get('/products', function (req, res) {
   findAllWhere({})
   .then(function(data) {
@@ -131,6 +154,7 @@ router.get('/products', function (req, res) {
     })
   })
 })
+
 
 
 module.exports = router;
