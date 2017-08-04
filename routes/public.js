@@ -53,6 +53,59 @@ function findAllWhere(whereStmt) {
   })
 }
 
+router.get('/products/name/:title', function (req, res) {
+  productsDb.findOne({
+    where: { "title": req.params.title },
+    include: [{
+      model: prodServsDb,
+      as: 'productServices',
+      include: {
+        model: servicesDb,
+        as: 'servedProducts'
+      }
+    },
+    {
+      model: reviewsDb,
+      as: 'productReviews',
+      include: {
+        model: usersDb,
+        as: 'userReviews'
+      }
+    }]
+  })
+  .then(function(product) {
+    // console.log('product JSON:', product);
+    let services = product.productServices.map((service) => {
+      return service.servedProducts.tag
+    })
+    let reviews = product.productReviews.map((review) => {
+      return {
+        "username": review.userReviews.username,
+        "rating": review.rating,
+        "review": review.review
+      }
+    })
+    return res.json({
+      "count": 1,
+      "title": product.title,
+      "tagline": product.tagline,
+      "type": product.type,
+      "rate": Number(product.rate),
+      "description": product.description,
+      "imgSrc": product.imgSrc,
+      "bgImg": product.bgImg,
+      "services": services,
+      "reviews": reviews
+    })
+  })
+  .catch(function(err) {
+    console.log('error', err);
+    res.json({
+      "error": err
+    })
+  })
+})
+
 router.get('/products/type/:type', function (req, res) {
   findAllWhere({type: req.params.type})
   .then(function(data) {
@@ -63,12 +116,6 @@ router.get('/products/type/:type', function (req, res) {
     res.json({
       "error": err
     })
-  })
-})
-
-router.get('/products/name/:title', function (req, res) {
-  res.json({
-    "error": "method not yet functional"
   })
 })
 

@@ -368,4 +368,16 @@ describe('GET /api/v2/products - test the gets', function () {
     })
     .end(done);
   })
+  it('Should return full Details for Deadpool', function (done) {
+    request(app).get('/api/v2/products/name/Deadpool')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 1);
+      assert.equal(res.body.title, "Deadpool");
+      assert.equal(res.body.services.includes("pool cleaning"), true);
+      assert.equal(res.body.services.length, 2);
+      assert.equal(res.body.reviews.length, 0);
+    })
+    .end(done)
+  })
 })
