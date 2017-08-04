@@ -155,6 +155,20 @@ router.get('/products', function (req, res) {
   })
 })
 
+router.get('/services', function (req, res) {
+  servicesDb.findAll({
+    where: {}
+  })
+  .then(function(services) {
+    let servicesList = services.map((service) => {
+      return (service.tag)
+    })
+    return res.json({
+      "count": servicesList.length,
+      "results": servicesList
+    })
+  })
+})
 
 
 module.exports = router;

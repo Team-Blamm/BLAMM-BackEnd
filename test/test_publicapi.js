@@ -390,4 +390,18 @@ describe('GET /api/v2/products - test the gets', function () {
     })
     .end(done)
   })
+  it('Should return a list of all services', function (done) {
+    request(app).get('/api/v2/services')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 6);
+      assert(res.body.results.includes('detective'))
+      assert(res.body.results.includes('pool cleaning'))
+      assert(res.body.results.includes('lurking'))
+      assert(res.body.results.includes('childrens parties'))
+      assert(res.body.results.includes('gadgets'))
+      assert(res.body.results.includes('chauffeur'))
+    })
+    .end(done);
+  })
 })
