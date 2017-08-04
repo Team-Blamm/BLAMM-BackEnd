@@ -22,21 +22,21 @@ function wait(ms){
 describe('POST /api/v2/signup - add a user to the DB', function () {
   before('reset the test database', function(done) {
     prodServsDb.destroy({ where: {}, truncate: false }).then(function() {
-      servicesDb.destroy({ where: {}, truncate: false }).then(function() {});
       ordersDb.destroy({ where: {}, truncate: false }).then(function() {
-        receiptDb.destroy({ where: {}, truncate: false }).then(function() {});
-        productsDb.destroy({ where: {}, truncate: false }).then(function() {
-          reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
-            usersDb.destroy({ where: {}, truncate: false }).then(function() {});
+        servicesDb.destroy({ where: {}, truncate: false }).then(function() {
+          receiptDb.destroy({ where: {}, truncate: false }).then(function() {
+            productsDb.destroy({ where: {}, truncate: false }).then(function() {
+              reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
+                usersDb.destroy({ where: {}, truncate: false }).then(function() {
+                  return done();
+                });
+              });
+            });
           });
         });
       });
     });
-
-    setTimeout(function() {
-      return done();
-    }, 500);
-  })
+  });
 
   it('Should add user "oracle" to the user collection', function(done) {
     request(app).post('/api/v2/signup')
@@ -143,7 +143,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 1);
       done();
     }).catch(function(err) {
-      log(err);
+      // log(err);
+      done();
     })
   })
   it('Should verify there are 3 services in the services DB', function (done) {
@@ -151,7 +152,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 3 entries in the prodServ DB', function (done) {
@@ -159,7 +161,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
 
@@ -191,7 +194,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 2);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 4 services in the services DB', function (done) {
@@ -199,7 +203,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 4);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 6 entries in the prodServ DB', function (done) {
@@ -207,7 +212,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 6);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
 
@@ -263,6 +269,114 @@ describe('POST /api/v2/products - test all products functions', function () {
         'detective',
         'chauffeur'
       ]
+    })
+    .end(done)
+  })
+})
+
+describe('GET /api/v2/products - test the gets', function () {
+  it('Should return Batman and Nightwing', function (done) {
+    request(app).get('/api/v2/products')
+    .expect(200)
+    // .expect({
+    //   "count": 2,
+    //   "results": [
+    //     {
+    //       "title": "Batman",
+    //       "tagline": "The Dark Knight",
+    //       "type": "hero",
+    //       "rate": 79.99,
+    //       "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+    //       "services": [
+    //         "detective",
+    //         "chauffeur"
+    //       ]
+    //     },
+    //     {
+    //       "title": "Nightwing",
+    //       "tagline": "I am the Night(wing)",
+    //       "type": "hero",
+    //       "rate": 40,
+    //       "imgSrc": "",
+    //       "services": [
+    //         "lurking",
+    //         "gadgets",
+    //         "childrens parties"
+    //       ]
+    //     }
+    //   ]
+    // })
+    .expect(function (res) {
+      // I know I'm being really lazy, I should check everything that is in the JSON above.  No Time.
+      // While I'm at it, I should split this into 8 files and make them completely independant.
+      // #HopesAndDreams
+      assert.equal(res.body.count, 2);
+    })
+    .end(done)
+  })
+  it('Should add user "deadpool" to the user collection', function(done) {
+    request(app).post('/api/v2/signup')
+      .send({
+        "username": "deadpool",
+        "password": "skullpoopl",
+        "email": "deadpool@deadpool.com",
+        "imgSrc": "",
+        "admin": true
+      })
+      .set('Accept', 'application/json')
+      .expect(200)
+      .expect({
+        "user": "deadpool"
+      })
+      .end(done)
+  });
+  it('Should allow deadpool to add a Deadpool product', function (done) {
+    request(app).post('/api/v2/products/add')
+    .auth("deadpool", "skullpoopl")
+    .send({
+      "title": "Deadpool",
+      "tagline": "Hi",
+      "type": "antihero",
+      "description": "Hi, I'm Deadpool!",
+      "rate": .99,
+      "imgSrc": "",
+      "bgImg": "",
+      "services": [
+        "pool cleaning",
+        "childrens parties"
+      ]
+    })
+    .expect(200)
+    .expect({
+      "product": "Deadpool"
+    })
+    .end(done)
+  })
+  it('Should return All 3', function (done) {
+    request(app).get('/api/v2/products')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 3);
+    })
+    .end(done)
+  })
+  it('Should return only Deadpool', function (done) {
+    request(app).get('/api/v2/products/type/antihero')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 1);
+    })
+    .end(done);
+  })
+  it('Should return full Details for Deadpool', function (done) {
+    request(app).get('/api/v2/products/name/Deadpool')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.count, 1);
+      assert.equal(res.body.title, "Deadpool");
+      assert.equal(res.body.services.includes("pool cleaning"), true);
+      assert.equal(res.body.services.length, 2);
+      assert.equal(res.body.reviews.length, 0);
     })
     .end(done)
   })

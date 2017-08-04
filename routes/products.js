@@ -140,7 +140,6 @@ router.put('/products/:title/update', function (req, res) {
         "error": "unauthorized action"
       })
     }
-    console.log(Object.keys(req.body));
     product.set(req.body)
     product.save().then(function(updated) {
       let outObj = {
@@ -161,7 +160,6 @@ router.put('/products/:title/update', function (req, res) {
           findUpdateService(req.body.services, product.id)
           .then(function(resolve) {
             outObj['services'] = req.body.services
-            console.log('outObj:', outObj);
             return res.json(outObj);
           })
           .catch(function (err) {

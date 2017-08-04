@@ -134,7 +134,7 @@ router.post('/signup', function (req, res) {
       username: req.body.username
   }}).then(function(data) {
     if (data) {
-      return next(null, false, {message: "Email already used"});
+      return res.status(400).json({"error": "Email already used"})
     } else {
       var userPass = genHash(req.body.password);
 
