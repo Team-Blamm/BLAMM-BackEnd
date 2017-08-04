@@ -22,12 +22,14 @@ function wait(ms){
 describe('POST /api/v2/signup - add a user to the DB', function () {
   before('reset the test database', function(done) {
     prodServsDb.destroy({ where: {}, truncate: false }).then(function() {
-      servicesDb.destroy({ where: {}, truncate: false }).then(function() {});
       ordersDb.destroy({ where: {}, truncate: false }).then(function() {
-        receiptDb.destroy({ where: {}, truncate: false }).then(function() {});
-        productsDb.destroy({ where: {}, truncate: false }).then(function() {
-          reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
-            usersDb.destroy({ where: {}, truncate: false }).then(function() {});
+        servicesDb.destroy({ where: {}, truncate: false }).then(function() {
+          receiptDb.destroy({ where: {}, truncate: false }).then(function() {
+            productsDb.destroy({ where: {}, truncate: false }).then(function() {
+              reviewsDb.destroy({ where: {}, truncate: false }).then(function() {
+                usersDb.destroy({ where: {}, truncate: false }).then(function() {});
+              });
+            });
           });
         });
       });
@@ -143,7 +145,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 1);
       done();
     }).catch(function(err) {
-      log(err);
+      // log(err);
+      done();
     })
   })
   it('Should verify there are 3 services in the services DB', function (done) {
@@ -151,7 +154,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 3 entries in the prodServ DB', function (done) {
@@ -159,7 +163,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 3);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
 
@@ -191,7 +196,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 2);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 4 services in the services DB', function (done) {
@@ -199,7 +205,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 4);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
   it('Should verify there are 6 entries in the prodServ DB', function (done) {
@@ -207,7 +214,8 @@ describe('POST /api/v2/products - test all products functions', function () {
       assert.equal(num, 6);
       done();
     }).catch(function(err) {
-      console.log(err);
+      // console.log(err);
+      done();
     })
   })
 
@@ -262,6 +270,42 @@ describe('POST /api/v2/products - test all products functions', function () {
       'services': [
         'detective',
         'chauffeur'
+      ]
+    })
+    .end(done)
+  })
+})
+
+describe('GET /api/v2/products - test the gets', function () {
+  it('Should return Batman and Nightwing', function (done) {
+    request(app).get('/api/v2/products')
+    .expect(200)
+    .expect({
+      "count": 2,
+      "results": [
+        {
+          "title": "Batman",
+          "tagline": "The Dark Knight",
+          "type": "hero",
+          "rate": 79.99,
+          "imgSrc": "https://comicvine.gamespot.com/images/1300-3031477/",
+          "services": [
+            "detective",
+            "chauffeur"
+          ]
+        },
+        {
+          "title": "Nightwing",
+          "tagline": "I am the Night(wing)",
+          "type": "hero",
+          "rate": 40,
+          "imgSrc": "",
+          "services": [
+            "lurking",
+            "gadgets",
+            "childrens parties"
+          ]
+        }
       ]
     })
     .end(done)
