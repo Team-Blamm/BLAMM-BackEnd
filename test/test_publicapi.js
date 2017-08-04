@@ -399,6 +399,7 @@ describe('POST /api/v2/products/:title/review', function () {
     .expect(200)
     .expect(function (res) {
       assert(res.body.reviews[0].username == "MrFreeze");
+      assert(res.body.reviews[0].userImg == "123.jpg")
       assert(res.body.reviews[0].rating == 1);
       assert(res.body.reviews[0].review == "Requested a ride across town, he wouldn't let me touch the temperature controls, or even consider turning it down.  Very inconsiderate")
     })
@@ -407,7 +408,7 @@ describe('POST /api/v2/products/:title/review', function () {
 })
 
 describe('POST /api/v2/orders - test orders', function () {
-  it('Should add a new order and receipt for Deadpool', function (done) {
+  it('Should add a new order and receipt for MrFreeze', function (done) {
     request(app).post('/api/v2/orders/new')
     .auth('MrFreeze', 'coldFront')
     .send({
@@ -427,18 +428,53 @@ describe('POST /api/v2/orders - test orders', function () {
       assert.equal(res.body.customer, "MrFreeze");
       assert.equal(res.body.order.length, 2);
       assert(res.body.orderNumber);
-      // "customer": "MrFreeze",
-      // "orderNumber":
-      // "order": [
-      //   {
-      //     "product": "Deadpool",
-      //     "quantity": 10
-      //   },
-      //   {
-      //     "product": "Nightwing",
-      //     "quantity": .5
-      //   }
-      // ]
+    })
+    .end(done)
+  })
+  it('Should add a new order and receipt for oracle', function (done) {
+    request(app).post('/api/v2/orders/new')
+    .auth('oracle', 'oracle')
+    .send({
+      "order": [
+        {
+          "product": "Batman",
+          "quantity": 1
+        }
+      ]
+    })
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.customer, "oracle");
+      assert.equal(res.body.order.length, 1);
+      assert(res.body.orderNumber);
+    })
+    .end(done)
+  })
+  it('Should let MrFreeze get his receipt', function (done) {
+    request(app).get('/api/v2/orders')
+    .auth('MrFreeze', 'coldFront')
+    .expect(200)
+    .expect(function (res) {
+      assert.equal(res.body.receipts[0].customer, "MrFreeze");
+      assert.equal(res.body.count, 1);
+    })
+    .end(done)
+  })
+})
+
+describe(' DELETE /api/v2/products/:title/delete', function () {
+  it('Should prevent deadpool from deleting Nightwing product', function(done) {
+    request(app).delete('/api/v2/products/Nightwing/delete')
+    .auth('deadpool', 'skullpoopl')
+    .expect(401)
+    .end(done)
+  })
+  it('Should allow oracle to delete the Nightwing product', function(done) {
+    request(app).delete('/api/v2/products/Nightwing/delete')
+    .auth('oracle', 'oracle')
+    .expect(200)
+    .expect({
+      "delete": "Nightwing"
     })
     .end(done)
   })

@@ -24,6 +24,10 @@ module.exports = function(Sequelize, DataTypes) {
     bgImg: {
       type: DataTypes.TEXT
     },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE

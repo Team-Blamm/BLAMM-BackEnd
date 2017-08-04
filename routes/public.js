@@ -14,6 +14,7 @@ const ordersDb = models.orders;
 
 function findAllWhere(whereStmt) {
   return new Promise ((resolve, reject) => {
+    whereStmt["isActive"] = true
     productsDb.findAll({
       where: whereStmt,
       include: {
@@ -81,6 +82,7 @@ router.get('/products/name/:title', function (req, res) {
     let reviews = product.productReviews.map((review) => {
       return {
         "username": review.userReviews.username,
+        "userImg": review.userReviews.imgSrc,
         "rating": review.rating,
         "review": review.review
       }
