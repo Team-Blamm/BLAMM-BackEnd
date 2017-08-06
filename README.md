@@ -19,7 +19,6 @@
 ###### Public Routes (no authentication needed)
 - **GET** - /api/v2/products - `Returns a list of all of the hero's and villain's in the DB`
   - **return**
-
     ```
     { "count": Integer,
       "results": [
@@ -38,7 +37,6 @@
 
 - **GET** - /api/v2/products/type/:type - `Takes a type (hero, villain) and returns a list of only hero's of that type`
   - **return**
-
     ```
     { "count": Integer,
       "results": [
@@ -57,7 +55,6 @@
 
 - **GET** - /products/service/:service - `Takes a service and returns products with that service`
   - **return**
-
     ```
     { "count": Integer,
       "results": [
@@ -100,19 +97,41 @@
     }
     ```
 
-- **POST** - /api/v2/signup -`Create a new user, returns {"user": "username"}`
+- **GET** - /api/v2/services - `Gets a list of all services`
+  - **return**
+    ```
+      {
+        "count": Integer,
+        "results": [
+          "services"
+        ]
+      }
+    ```
+
+- **POST** - /api/v2/signup -`Create a new user`
   - username - unique string
   - email - unique string
   - password - password
   - imgSrc - string link to served image file
-  - admin - boolean, default false
+  - admin - boolean, (optional), default false
+  - **return**
+    ```
+      {
+        "user": "username"
+      }
+    ```
 
 ###### Authenticated Routes (username/password)
 - **GET** - /api/v2/check - `Validate a user/pass`
   - username
   - password
-  - **returns** `{"user": "username"}`
-- **POST** - /api/v2/products/add - `Must have admin: true.  Creates a new product, returns {"product": "title"}`
+  - **return**
+    ```
+      {
+        "user": "username"
+      }
+    ```
+- **POST** - /api/v2/products/add - `Must have admin: true.  Creates a new product`
   - title - unique string
   - tagline - a one sentence string highlighting the product
   - type - "hero" or "villain"
@@ -121,6 +140,13 @@
   - imgSrc - source of an image of the product
   - bgImg - source of a background image for the page
   - services - an array of services that the product provides
+  - **return**
+    ```
+      {
+        "product": "title"
+      }
+    ```
+
 - **PUT** - /api/v2/products/:title/update - `Makes updates to a particular product`
   - tagline - a one sentence string highlighting the product (optional)
   - type - "hero" or "villain" (optional)
@@ -129,15 +155,74 @@
   - imgSrc - source of an image of the product (optional)
   - bgImg - source of a background image for the page (optional)
   - services - an array of services that the product provides (optional)
+  - **return**
+    ```
+      {
+        "product": "title",
+        "updatedField": "newValue",
+        "updatedField": "newValue"...
+      }
+    ```
 - **DELETE** - /api/v2/products/:title/delete - `Removes a particular product`
   - must be admin who created the product
+  - **return**
+    ```
+      {
+        "delete": "title"
+      }
+    ```
+
 - **POST** - /api/v2/products/:title/review - `Adds a review to a particular product`
   - rating - integer between 0 and 5, inclusive
   - review - text
-- **POST** - /api/v2/services/new - `Adds a new service to the database`
-  - service - unique string
-- **GET** - /api/v2/services/ - `pulls all listed services`
-- **POST** - /api/v2/order - `Creates a new order and returns a receipt`
-  - item - an array of objects containing { product:title, quantity:positiveNumber }
+  - **return**
+    ```
+      {
+        "product": "title",
+        "rating": rating,
+        "review": "review"
+      }
+    ```
+
+- **GET** - /api/v2/orders - `Returns all orders for the logged in user`
+  - **return**
+    ```
+      {
+        "count": Integer,
+        "receipts": [
+          {
+            "customer": "username,
+            "receiptId": Integer,
+            "order": [
+              {
+                "product": ord.prodOrders.title,
+                "quantity": ord.quantity
+              }
+            ]
+          }
+        ]
+      }
+    ```
+
+- **POST** - /api/v2/orders/new - `Creates a new order and returns a receipt`
+  - item - an array of objects containing
+    ```
+    {
+      "product": "title",
+      "quantity": Integer
+    }```
+  - **return**
+    ```
+      {
+        "customer": "username",
+        "orderNumber": Integer,
+        "order": [
+          {
+            "product": "title",
+            "quantity": Integer
+          }
+        ]
+      }
+    ```
 
 #### login and log out of ui is still being figured out.
