@@ -17,14 +17,22 @@ function findAllWhere(whereStmt) {
     whereStmt["isActive"] = true
     productsDb.findAll({
       where: whereStmt,
-      include: {
+      include: [{
         model: prodServsDb,
         as: 'productServices',
         include: {
           model: servicesDb,
           as: 'servedProducts'
         }
-      }
+      },
+      {
+        model: reviewsDb,
+        as: 'productReviews',
+        include: {
+          model: usersDb,
+          as: 'userReviews'
+        }
+      }]
     })
     .then(function (products) {
       let outJson = {
@@ -35,13 +43,24 @@ function findAllWhere(whereStmt) {
         let services = product.productServices.map((service) => {
           return service.servedProducts.tag
         })
+        let reviews = product.productReviews.map((review) => {
+          return {
+            "username": review.userReviews.username,
+            "userImg": review.userReviews.imgSrc,
+            "rating": review.rating,
+            "review": review.review
+          }
+        })
         return {
           "title": product.title,
           "tagline": product.tagline,
           "type": product.type,
           "rate": Number(product.rate),
+          "description": product.description,
           "imgSrc": product.imgSrc,
-          "services": services
+          "bgImg": product.bgImg,
+          "services": services,
+          "reviews": reviews
         }
       })
       // console.log('output:', outJson);
