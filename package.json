@@ -24,6 +24,7 @@
     "assert": "^1.4.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
     "express": "^4.15.3",
     "express-session": "^1.15.4",
     "mocha": "^3.4.2",

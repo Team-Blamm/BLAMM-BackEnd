@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
 const pg = require('pg');
+const cors = require('cors');
 const env = process.env.NODE_ENV || "dev";
 const config = require('./config/config.json')[env]
 
@@ -37,6 +38,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+app.use(cors());
 
 // TODO: use Routes here
 app.use('/api/v1', pubRoutes);
