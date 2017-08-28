@@ -272,6 +272,19 @@ describe('POST /api/v2/products - test all products functions', function () {
     })
     .end(done)
   })
+  it('Should allow oracle to update the Batman tagline and services', function (done) {
+    request(app).put('/api/v2/products/Batman/update')
+    .auth('oracle', 'oracle')
+    .send({
+      'tagline': ''
+    })
+    .expect(200)
+    .expect({
+      'product': 'Batman',
+      'tagline': 'The Dark Knight'
+    })
+    .end(done)
+  })
 })
 
 describe('GET /api/v2/products - test the gets', function () {

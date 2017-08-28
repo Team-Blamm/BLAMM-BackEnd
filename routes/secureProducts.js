@@ -79,6 +79,11 @@ router.use(function (req, res, next) {
 })
 
 router.post('/products/add', function (req, res) {
+  if (!req.body.title) {
+    return res.status(400).json({
+      "error": "no title included"
+    })
+  }
   let newProduct = productsDb.build({
     "title": req.body.title,
     "description": req.body.description,
